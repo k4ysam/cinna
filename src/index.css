@@ -1,0 +1,41 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  /* Warm paper palette — all oklch for perceptual uniformity */
+  --bg:          oklch(95.5% 0.013 75);
+  --text:        oklch(17%   0.018 75);
+  --text-muted:  oklch(50%   0.016 75);
+  --text-faint:  oklch(68%   0.012 75);
+  --accent:      oklch(52%   0.130 52);
+  --rule-color:  oklch(85%   0.010 75);
+
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-body:    'DM Sans', system-ui, sans-serif;
+
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+  color-scheme: light;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+ul {
+  list-style: none;
+}

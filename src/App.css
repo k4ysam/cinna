@@ -1,0 +1,249 @@
+/* ─── Keyframes ─────────────────────────────────────────────────── */
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes drawLine {
+  from { transform: scaleX(0); }
+  to   { transform: scaleX(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .navbar,
+  .hero-eyebrow,
+  .hero-name,
+  .hero-rule,
+  .hero-footer {
+    animation: none !important;
+  }
+}
+
+/* ─── Layout shell ───────────────────────────────────────────────── */
+
+.hero-section {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding-inline: clamp(1.5rem, 6vw, 5rem);
+}
+
+/* ─── NavBar ─────────────────────────────────────────────────────── */
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 1.75rem;
+  animation: fadeIn 0.7s ease-out 0.05s both;
+}
+
+.navbar-logo {
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  user-select: none;
+}
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 2.5rem;
+}
+
+.navbar-links a {
+  font-family: var(--font-body);
+  font-size: 0.78rem;
+  font-weight: 400;
+  color: var(--text-muted);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  transition: color 0.2s ease;
+}
+
+.navbar-links a:hover {
+  color: var(--text);
+}
+
+/* ─── Hero Content ───────────────────────────────────────────────── */
+
+.hero-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding-bottom: clamp(3rem, 9vh, 7rem);
+}
+
+/* Eyebrow — small label above the name */
+.hero-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 1.25rem;
+  animation: slideUp 0.6s ease-out 0.15s both;
+}
+
+.hero-eyebrow span {
+  font-family: var(--font-body);
+  font-size: 0.73rem;
+  font-weight: 400;
+  color: var(--text-faint);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.hero-eyebrow .eyebrow-sep {
+  color: var(--rule-color);
+  font-size: 0.6rem;
+  letter-spacing: 0;
+}
+
+/* The name — the centerpiece */
+.hero-name {
+  font-family: var(--font-display);
+  font-size: clamp(4.5rem, 18vw, 15rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--text);
+  letter-spacing: -0.035em;
+  line-height: 0.88;
+  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
+  animation: slideUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
+}
+
+/* Rule — draws left-to-right after name appears */
+.hero-rule {
+  height: 1px;
+  background-color: var(--rule-color);
+  transform-origin: left center;
+  margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
+  animation: drawLine 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.85s both;
+}
+
+/* Footer row — description left, actions right */
+.hero-footer {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 2rem;
+  animation: slideUp 0.7s ease-out 1.05s both;
+}
+
+.hero-description {
+  font-family: var(--font-body);
+  font-size: 0.82rem;
+  font-weight: 300;
+  color: var(--text-muted);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  line-height: 2;
+}
+
+/* ─── Actions ────────────────────────────────────────────────────── */
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 2.25rem;
+  flex-shrink: 0;
+}
+
+/* Primary — underline that retracts on hover */
+.btn-primary {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 400;
+  color: var(--text);
+  letter-spacing: 0.04em;
+  position: relative;
+  padding-bottom: 3px;
+}
+
+.btn-primary::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: var(--text);
+  transform-origin: left center;
+  transform: scaleX(1);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-primary:hover::after {
+  transform-origin: right center;
+  transform: scaleX(0);
+}
+
+/* Ghost — subtle, draws underline on hover */
+.btn-ghost {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 300;
+  color: var(--text-faint);
+  letter-spacing: 0.04em;
+  position: relative;
+  padding-bottom: 3px;
+  transition: color 0.2s ease;
+}
+
+.btn-ghost::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: var(--text-muted);
+  transform-origin: left center;
+  transform: scaleX(0);
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.btn-ghost:hover {
+  color: var(--text);
+}
+
+.btn-ghost:hover::after {
+  transform: scaleX(1);
+}
+
+/* ─── Mobile ─────────────────────────────────────────────────────── */
+
+@media (max-width: 640px) {
+  .navbar {
+    padding-block: 1.25rem;
+  }
+
+  .navbar-links {
+    gap: 1.75rem;
+  }
+
+  .hero-footer {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1.75rem;
+  }
+
+  .hero-actions {
+    gap: 2rem;
+  }
+}

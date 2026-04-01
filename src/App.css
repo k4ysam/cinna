@@ -1,33 +1,50 @@
 /* ─── Keyframes ─────────────────────────────────────────────────── */
 
-@keyframes slideUp {
-  from {
-    opacity: 0;
-    transform: translateY(28px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Spring rise: used for eyebrow, footer */
+@keyframes springUp {
+  from { opacity: 0; transform: translateY(36px); }
+  to   { opacity: 1; transform: translateY(0);    }
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+/* Big spring rise: hero name — more travel, more drama */
+@keyframes springUpBig {
+  from { opacity: 0; transform: translateY(70px) skewY(2deg); }
+  to   { opacity: 1; transform: translateY(0)    skewY(0deg); }
 }
 
+/* Navbar drops from above */
+@keyframes dropDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to   { opacity: 1; transform: translateY(0);     }
+}
+
+/* Logo pops in with personality */
+@keyframes popIn {
+  0%   { opacity: 0; transform: scale(0.4) rotate(-12deg); }
+  55%  { opacity: 1; transform: scale(1.12) rotate(4deg);  }
+  75%  {             transform: scale(0.96) rotate(-1deg);  }
+  100% {             transform: scale(1)   rotate(0deg);   }
+}
+
+/* Rule: draws across, flashes yellow then settles orange */
 @keyframes drawLine {
-  from { transform: scaleX(0); }
-  to   { transform: scaleX(1); }
+  0%   { transform: scaleX(0); filter: brightness(1.8); }
+  70%  { transform: scaleX(1); filter: brightness(1.5); }
+  100% { transform: scaleX(1); filter: brightness(1);   }
+}
+
+/* Separator dot pops in */
+@keyframes dotPop {
+  0%   { opacity: 0; transform: scale(0) rotate(-90deg); }
+  60%  { opacity: 1; transform: scale(1.4) rotate(10deg); }
+  100% {             transform: scale(1) rotate(0deg);    }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .navbar,
-  .hero-eyebrow,
-  .hero-name,
-  .hero-rule,
-  .hero-footer {
-    animation: none !important;
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
@@ -47,17 +64,26 @@
   align-items: center;
   justify-content: space-between;
   padding-block: 1.75rem;
-  animation: fadeIn 0.7s ease-out 0.05s both;
+  animation: dropDown 0.7s var(--spring) 0.05s both;
 }
 
+/* Logo springs in and tilts playfully on hover */
 .navbar-logo {
   font-family: var(--font-display);
   font-size: 1.75rem;
   font-weight: 400;
-  color: var(--text);
+  color: var(--yellow);
   letter-spacing: -0.02em;
   line-height: 1;
   user-select: none;
+  display: inline-block;
+  animation: popIn 0.65s var(--ease-snap) 0.15s both;
+  transition: transform 0.35s var(--spring-soft), color 0.2s ease;
+}
+
+.navbar-logo:hover {
+  transform: scale(1.1) rotate(-6deg);
+  color: var(--orange);
 }
 
 .navbar-links {
@@ -66,6 +92,14 @@
   gap: 2.5rem;
 }
 
+/* Each nav link cascades in individually */
+.navbar-links li {
+  animation: springUp 0.5s var(--spring) both;
+}
+.navbar-links li:nth-child(1) { animation-delay: 0.12s; }
+.navbar-links li:nth-child(2) { animation-delay: 0.20s; }
+.navbar-links li:nth-child(3) { animation-delay: 0.28s; }
+
 .navbar-links a {
   font-family: var(--font-body);
   font-size: 0.78rem;
@@ -73,11 +107,15 @@
   color: var(--text-muted);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  transition: color 0.2s ease;
+  display: inline-block;
+  transition:
+    color     0.2s ease,
+    transform 0.3s var(--spring-soft);
 }
 
 .navbar-links a:hover {
-  color: var(--text);
+  color: var(--orange);
+  transform: translateY(-3px);
 }
 
 /* ─── Hero Content ───────────────────────────────────────────────── */
@@ -90,13 +128,13 @@
   padding-bottom: clamp(3rem, 9vh, 7rem);
 }
 
-/* Eyebrow — small label above the name */
+/* Eyebrow */
 .hero-eyebrow {
   display: flex;
   align-items: center;
   gap: 0.75rem;
   margin-bottom: 1.25rem;
-  animation: slideUp 0.6s ease-out 0.15s both;
+  animation: springUp 0.6s var(--spring) 0.18s both;
 }
 
 .hero-eyebrow span {
@@ -108,41 +146,56 @@
   text-transform: uppercase;
 }
 
+/* Hot pink separator — spins in, rotates on eyebrow hover */
 .hero-eyebrow .eyebrow-sep {
-  color: var(--rule-color);
+  color: var(--pink);
   font-size: 0.6rem;
   letter-spacing: 0;
+  display: inline-block;
+  animation: dotPop 0.55s var(--spring) 0.35s both;
+  transition: transform 0.4s var(--spring-soft);
 }
 
-/* The name — the centerpiece */
+.hero-eyebrow:hover .eyebrow-sep {
+  transform: rotate(180deg) scale(1.6);
+}
+
+/* The name — biggest spring in the whole page */
 .hero-name {
   font-family: var(--font-display);
   font-size: clamp(4.5rem, 18vw, 15rem);
   font-weight: 300;
   font-style: italic;
-  color: var(--text);
+  color: var(--yellow);
   letter-spacing: -0.035em;
   line-height: 0.88;
   margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
-  animation: slideUp 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.25s both;
+  animation: springUpBig 0.85s var(--spring) 0.28s both;
+  display: block;
+  transition: letter-spacing 0.4s var(--ease-snap), color 0.3s ease;
 }
 
-/* Rule — draws left-to-right after name appears */
+.hero-name:hover {
+  letter-spacing: -0.02em;
+  color: var(--orange);
+}
+
+/* Rule — draws left-to-right, flashes then settles */
 .hero-rule {
   height: 1px;
-  background-color: var(--rule-color);
+  background-color: var(--orange);
   transform-origin: left center;
   margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
-  animation: drawLine 0.9s cubic-bezier(0.16, 1, 0.3, 1) 0.85s both;
+  animation: drawLine 0.8s var(--ease-snap) 0.88s both;
 }
 
-/* Footer row — description left, actions right */
+/* Footer */
 .hero-footer {
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
   gap: 2rem;
-  animation: slideUp 0.7s ease-out 1.05s both;
+  animation: springUp 0.65s var(--spring) 1.05s both;
 }
 
 .hero-description {
@@ -164,15 +217,19 @@
   flex-shrink: 0;
 }
 
-/* Primary — underline that retracts on hover */
+/* Primary — lifts and grows on hover, presses on active */
 .btn-primary {
   font-family: var(--font-body);
   font-size: 0.875rem;
   font-weight: 400;
-  color: var(--text);
+  color: var(--yellow);
   letter-spacing: 0.04em;
   position: relative;
   padding-bottom: 3px;
+  display: inline-block;
+  transition:
+    transform 0.3s var(--spring-soft),
+    color     0.2s ease;
 }
 
 .btn-primary::after {
@@ -182,10 +239,14 @@
   left: 0;
   right: 0;
   height: 1px;
-  background-color: var(--text);
+  background-color: var(--yellow);
   transform-origin: left center;
   transform: scaleX(1);
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.3s var(--ease-snap);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px) scale(1.04);
 }
 
 .btn-primary:hover::after {
@@ -193,16 +254,24 @@
   transform: scaleX(0);
 }
 
-/* Ghost — subtle, draws underline on hover */
+.btn-primary:active {
+  transform: translateY(1px) scale(0.97);
+  transition-duration: 0.08s;
+}
+
+/* Ghost — lifts and flips to pink on hover */
 .btn-ghost {
   font-family: var(--font-body);
   font-size: 0.875rem;
   font-weight: 300;
-  color: var(--text-faint);
+  color: var(--orange);
   letter-spacing: 0.04em;
   position: relative;
   padding-bottom: 3px;
-  transition: color 0.2s ease;
+  display: inline-block;
+  transition:
+    transform 0.3s var(--spring-soft),
+    color     0.2s ease;
 }
 
 .btn-ghost::after {
@@ -212,18 +281,24 @@
   left: 0;
   right: 0;
   height: 1px;
-  background-color: var(--text-muted);
+  background-color: var(--pink);
   transform-origin: left center;
   transform: scaleX(0);
-  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: transform 0.3s var(--ease-snap);
 }
 
 .btn-ghost:hover {
-  color: var(--text);
+  color: var(--pink);
+  transform: translateY(-3px);
 }
 
 .btn-ghost:hover::after {
   transform: scaleX(1);
+}
+
+.btn-ghost:active {
+  transform: translateY(1px) scale(0.97);
+  transition-duration: 0.08s;
 }
 
 /* ─── Mobile ─────────────────────────────────────────────────────── */

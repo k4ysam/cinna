@@ -1,13 +1,15 @@
 import { useEffect, useRef } from 'react'
+import inkayIdle  from '../assets/inkay_idle.gif'
+import inkayPress from '../assets/inkay_press2.gif'
 
 export default function CursorDot() {
-  const dotRef = useRef<HTMLDivElement>(null)
+  const wrapRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!window.matchMedia('(pointer: fine)').matches) return
 
-    const dot = dotRef.current
-    if (!dot) return
+    const wrap = wrapRef.current
+    if (!wrap) return
 
     const target  = { x: -100, y: -100 }
     const current = { x: -100, y: -100 }
@@ -20,18 +22,10 @@ export default function CursorDot() {
     const onMove = (e: MouseEvent) => {
       target.x = e.clientX
       target.y = e.clientY
-
-      // Hover detection via event target — no per-element listeners needed
-      const el = e.target as HTMLElement
-      if (el.closest('a, button, [role="button"]')) {
-        dot.setAttribute('data-hover', '')
-      } else {
-        dot.removeAttribute('data-hover')
-      }
     }
 
-    const onDown = () => dot.setAttribute('data-pressed', '')
-    const onUp   = () => dot.removeAttribute('data-pressed')
+    const onDown = () => wrap.setAttribute('data-pressed', '')
+    const onUp   = () => wrap.removeAttribute('data-pressed')
 
     document.addEventListener('mousemove', onMove)
     document.addEventListener('mousedown', onDown)
@@ -40,7 +34,7 @@ export default function CursorDot() {
     function loop() {
       current.x = lerp(current.x, target.x, 0.14)
       current.y = lerp(current.y, target.y, 0.14)
-      dot!.style.transform =
+      wrap!.style.transform =
         `translate(calc(${current.x}px - 50%), calc(${current.y}px - 50%))`
       rafId = requestAnimationFrame(loop)
     }
@@ -55,5 +49,10 @@ export default function CursorDot() {
     }
   }, [])
 
-  return <div ref={dotRef} className="cursor-dot" aria-hidden="true" />
+  return (
+    <div ref={wrapRef} className="inkay-cursor" aria-hidden="true">
+      <img src={inkayIdle}  alt="" className="inkay-idle" />
+      <img src={inkayPress} alt="" className="inkay-press" />
+    </div>
+  )
 }

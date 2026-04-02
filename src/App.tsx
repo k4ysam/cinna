@@ -5,6 +5,7 @@ import CloudFlood from './components/CloudFlood'
 import ProjectsPage from './components/ProjectsPage'
 import CursorDot from './components/CursorDot'
 import Confetti from './components/Confetti'
+import HeroMusicPlayer from './components/HeroMusicPlayer'
 import './App.css'
 
 type Page = 'hero' | 'projects'
@@ -29,6 +30,7 @@ function App() {
   return (
     <>
       <CursorDot />
+      <HeroMusicPlayer visible={page === 'hero' && !flooding} />
       {page === 'hero' && !flooding && <Confetti />}
 
       {page === 'hero' && (

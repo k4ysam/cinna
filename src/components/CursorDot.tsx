@@ -1,9 +1,10 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import inkayIdle  from '../assets/inkay_idle.gif'
 import inkayPress from '../assets/inkay_press2.gif'
 
 export default function CursorDot() {
-  const wrapRef = useRef<HTMLDivElement>(null)
+  const wrapRef  = useRef<HTMLDivElement>(null)
+  const [pressed, setPressed] = useState(false)
 
   useEffect(() => {
     if (!window.matchMedia('(pointer: fine)').matches) return
@@ -15,17 +16,11 @@ export default function CursorDot() {
     const current = { x: -100, y: -100 }
     let rafId = 0
 
-    function lerp(a: number, b: number, t: number) {
-      return a + (b - a) * t
-    }
+    const lerp = (a: number, b: number, t: number) => a + (b - a) * t
 
-    const onMove = (e: MouseEvent) => {
-      target.x = e.clientX
-      target.y = e.clientY
-    }
-
-    const onDown = () => wrap.setAttribute('data-pressed', '')
-    const onUp   = () => wrap.removeAttribute('data-pressed')
+    const onMove = (e: MouseEvent) => { target.x = e.clientX; target.y = e.clientY }
+    const onDown = () => setPressed(true)
+    const onUp   = () => setPressed(false)
 
     document.addEventListener('mousemove', onMove)
     document.addEventListener('mousedown', onDown)
@@ -38,7 +33,6 @@ export default function CursorDot() {
         `translate(calc(${current.x}px - 50%), calc(${current.y}px - 50%))`
       rafId = requestAnimationFrame(loop)
     }
-
     loop()
 
     return () => {
@@ -51,8 +45,11 @@ export default function CursorDot() {
 
   return (
     <div ref={wrapRef} className="inkay-cursor" aria-hidden="true">
-      <img src={inkayIdle}  alt="" className="inkay-idle" />
-      <img src={inkayPress} alt="" className="inkay-press" />
+      <img
+        src={pressed ? inkayPress : inkayIdle}
+        alt=""
+        style={{ width: '48px', height: '48px', display: 'block' }}
+      />
     </div>
   )
 }

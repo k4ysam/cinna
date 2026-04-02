@@ -16,7 +16,10 @@ function App() {
   function handleArrowClick() {
     if (flooding) return
     setFlooding(true)
-    setTimeout(() => setPage('projects'), 600)
+  }
+
+  function handlePageSwap() {
+    setPage('projects')
   }
 
   function handleFloodComplete() {
@@ -35,9 +38,27 @@ function App() {
         </>
       )}
 
-      {page === 'projects' && <ProjectsPage />}
+      {page === 'projects' && <ProjectsPage revealed={!flooding} />}
 
-      {flooding && <CloudFlood onComplete={handleFloodComplete} />}
+      {flooding && page === 'hero' && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 49,
+            backgroundColor: '#A8C8F0',
+            animation: 'heroFadeBlue 900ms ease forwards',
+            pointerEvents: 'none',
+          }}
+        />
+      )}
+
+      {flooding && (
+        <CloudFlood
+          onPageSwap={handlePageSwap}
+          onComplete={handleFloodComplete}
+        />
+      )}
     </>
   )
 }

@@ -13,11 +13,15 @@
   50%       { transform: translateY(-12px); }
 }
 
-/* Cloud flood — grid rushes upward */
-@keyframes cloudRush {
-  0%   { transform: translateY(110vh); }
-  100% { transform: translateY(-140vh); }
+/* Hero fade-to-blue during cloud cover phase */
+@keyframes heroFadeBlue {
+  from { opacity: 0; }
+  to   { opacity: 1; }
 }
+
+/* Cloud flood — rows enter/exit */
+@keyframes cloudRowIn  { from { transform: translateY(110vh); } to { transform: translateY(0); } }
+@keyframes cloudRowOut { from { transform: translateY(0); } to { transform: translateY(-110vh); } }
 
 /* Bouncing arrow */
 @keyframes arrowBounce {

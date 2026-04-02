@@ -1,15 +1,5 @@
 import { useEffect, useRef } from 'react'
 
-const SPARK_COLORS = ['var(--yellow)', 'var(--orange)', 'var(--pink)']
-
-function spawnSpark(x: number, y: number) {
-  const el = document.createElement('div')
-  el.className = 'cursor-spark'
-  el.style.cssText = `left:${x}px;top:${y}px;background:${SPARK_COLORS[Math.floor(Math.random() * 3)]}`
-  document.body.appendChild(el)
-  setTimeout(() => el.remove(), 500)
-}
-
 export default function CursorDot() {
   const dotRef = useRef<HTMLDivElement>(null)
 
@@ -22,7 +12,6 @@ export default function CursorDot() {
     const target  = { x: -100, y: -100 }
     const current = { x: -100, y: -100 }
     let rafId = 0
-    let lastSparkTime = 0
 
     function lerp(a: number, b: number, t: number) {
       return a + (b - a) * t
@@ -39,13 +28,6 @@ export default function CursorDot() {
       } else {
         dot.removeAttribute('data-hover')
       }
-
-      // Spark trail — throttled to ~20/sec
-      const now = performance.now()
-      if (now - lastSparkTime > 50) {
-        lastSparkTime = now
-        spawnSpark(e.clientX, e.clientY)
-      }
     }
 
     const onDown = () => dot.setAttribute('data-pressed', '')
@@ -58,7 +40,7 @@ export default function CursorDot() {
     function loop() {
       current.x = lerp(current.x, target.x, 0.14)
       current.y = lerp(current.y, target.y, 0.14)
-      dot.style.transform =
+      dot!.style.transform =
         `translate(calc(${current.x}px - 50%), calc(${current.y}px - 50%))`
       rafId = requestAnimationFrame(loop)
     }

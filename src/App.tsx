@@ -1,4 +1,4 @@
-import HeroSection from './components/HeroSection'
+import KawaiiHero from './components/KawaiiHero'
 import CursorDot from './components/CursorDot'
 import Confetti from './components/Confetti'
 import './App.css'
@@ -8,7 +8,7 @@ function App() {
     <>
       <CursorDot />
       <Confetti />
-      <HeroSection />
+      <KawaiiHero />
     </>
   )
 }

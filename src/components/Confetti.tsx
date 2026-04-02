@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 
 // Approximate brand palette as canvas-compatible hex values
-const COLORS = ['#f2cc00', '#e07820', '#cc3078', '#e85a28', '#f0a030', '#fabb2a']
+const COLORS = ['#F9C5D1', '#A8C8F0', '#FFB3D9', '#87CEEB', '#F5EFFF']
 
 interface Particle {
   x: number; y: number
@@ -23,28 +23,28 @@ export default function Confetti() {
     canvas.width  = window.innerWidth
     canvas.height = window.innerHeight
 
-    const particles: Particle[] = Array.from({ length: 65 }, () => ({
+    const particles: Particle[] = Array.from({ length: 28 }, () => ({
       x:     Math.random() * window.innerWidth,
-      y:     -20 - Math.random() * 180,
-      vx:    (Math.random() - 0.5) * 6,
-      vy:    2.5 + Math.random() * 4,
-      w:     4  + Math.random() * 7,
-      h:     6  + Math.random() * 10,
+      y:     -20 - Math.random() * 120,
+      vx:    (Math.random() - 0.5) * 3.5,
+      vy:    1.8 + Math.random() * 2.5,
+      w:     3  + Math.random() * 5,
+      h:     5  + Math.random() * 7,
       color: COLORS[Math.floor(Math.random() * COLORS.length)],
       alpha: 1,
       rot:   Math.random() * Math.PI * 2,
-      vr:    (Math.random() - 0.5) * 0.14,
+      vr:    (Math.random() - 0.5) * 0.10,
     }))
 
     let rafId = 0
     let start = 0
-    const DURATION = 2800
+    const DURATION = 2200
 
     function draw(ts: number) {
       if (!start) start = ts
       const elapsed = ts - start
 
-      ctx.clearRect(0, 0, canvas.width, canvas.height)
+      ctx.clearRect(0, 0, canvas!.width, canvas!.height)
 
       let alive = false
       for (const p of particles) {

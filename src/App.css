@@ -1,393 +1,67 @@
-/* ─── Keyframes ─────────────────────────────────────────────────── */
+/* ── Kawaii Keyframes ─────────────────────────────────────────── */
 
-@keyframes springUp {
-  from { opacity: 0; transform: translateY(36px); }
-  to   { opacity: 1; transform: translateY(0);    }
+@keyframes theatricalDrop {
+  0%   { transform: translateY(-120vh) rotate(-8deg); opacity: 0; }
+  60%  { transform: translateY(8px)    rotate(3deg);  opacity: 1; }
+  75%  { transform: translateY(-12px)  rotate(-2deg); }
+  88%  { transform: translateY(5px)    rotate(1deg);  }
+  100% { transform: translateY(0)      rotate(0deg);  opacity: 1; }
 }
 
-@keyframes springUpBig {
-  from { opacity: 0; transform: translateY(70px) skewY(2deg); }
-  to   { opacity: 1; transform: translateY(0)    skewY(0deg); }
+@keyframes nameReveal {
+  0%   { opacity: 0; transform: scale(0.75) translateY(16px); }
+  65%  { opacity: 1; transform: scale(1.05) translateY(-4px); }
+  100% { opacity: 1; transform: scale(1)    translateY(0);    }
 }
 
-@keyframes dropDown {
-  from { opacity: 0; transform: translateY(-20px); }
-  to   { opacity: 1; transform: translateY(0);     }
-}
-
-@keyframes popIn {
-  0%   { opacity: 0; transform: scale(0.4) rotate(-12deg); }
-  55%  { opacity: 1; transform: scale(1.12) rotate(4deg);  }
-  75%  {             transform: scale(0.96) rotate(-1deg);  }
-  100% {             transform: scale(1)   rotate(0deg);   }
-}
-
-@keyframes dotPop {
-  0%   { opacity: 0; transform: scale(0) rotate(-90deg);  }
-  60%  { opacity: 1; transform: scale(1.4) rotate(10deg); }
-  100% {             transform: scale(1)  rotate(0deg);   }
-}
-
-/* Rule: draws across, flashes then settles */
-@keyframes drawLine {
-  0%   { transform: scaleX(0); filter: brightness(1.8); }
-  70%  { transform: scaleX(1); filter: brightness(1.5); }
-  100% { transform: scaleX(1); filter: brightness(1);   }
-}
-
-/* Idle shimmer on the rule after it finishes drawing */
-@keyframes ruleShimmer {
-  0%, 100% { opacity: 1;    }
-  50%      { opacity: 0.45; }
-}
-
-/* Logo party: 720° spin + color cycle on the S. easter egg */
-@keyframes logoParty {
-  0%   { transform: scale(1)   rotate(0deg);   color: var(--yellow); }
-  25%  { transform: scale(1.3) rotate(180deg); color: var(--orange); }
-  50%  { transform: scale(1.1) rotate(360deg); color: var(--pink);   }
-  75%  { transform: scale(1.2) rotate(540deg); color: var(--coral);  }
-  100% { transform: scale(1)   rotate(720deg); color: var(--yellow); }
-}
-
-/* Name easter egg: quick color pulse when clicked */
-@keyframes easterPulse {
-  0%   { color: var(--coral); transform: scale(1.02); }
-  60%  { color: var(--pink);  transform: scale(1.04); }
-  100% { color: var(--coral); transform: scale(1);    }
-}
-
-/* Toast "👋 hi!" that floats up from name click */
-@keyframes toastUp {
-  0%   { opacity: 1; transform: translate(-50%, -120%) translateY(0);    }
-  55%  { opacity: 1; transform: translate(-50%, -120%) translateY(-22px); }
-  100% { opacity: 0; transform: translate(-50%, -120%) translateY(-38px); }
-}
-
-/* Cursor spark trail */
-@keyframes sparkFade {
-  0%   { opacity: 0.9; transform: translate(-50%, -50%) scale(1);   }
-  100% { opacity: 0;   transform: translate(-50%, -50%) scale(0.1); }
+@keyframes floatIdle {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-12px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   * {
-    animation-duration:        0.01ms !important;
-    animation-iteration-count: 1      !important;
-    transition-duration:       0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }
 
-/* ─── Cursor spark ───────────────────────────────────────────────── */
+/* ── Layout ───────────────────────────────────────────────────── */
 
-.cursor-spark {
+.kawaii-stage {
   position: fixed;
-  width: 5px;
-  height: 5px;
-  border-radius: 50%;
-  pointer-events: none;
-  z-index: 9998;
-  animation: sparkFade 0.5s var(--ease-snap) forwards;
-}
-
-/* ─── Name toast ─────────────────────────────────────────────────── */
-
-.name-toast {
-  position: fixed;
-  font-family: var(--font-body);
-  font-size: 1.1rem;
-  color: var(--coral);
-  pointer-events: none;
-  z-index: 500;
-  animation: toastUp 1.5s var(--ease-snap) forwards;
-  white-space: nowrap;
-}
-
-/* ─── Word cycling ───────────────────────────────────────────────── */
-
-.word-cycle {
-  display: inline-block;
-  transition:
-    opacity   0.28s ease,
-    transform 0.28s var(--ease-snap);
-}
-
-.word-cycle--fading {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-
-/* ─── Layout shell ───────────────────────────────────────────────── */
-
-.hero-section {
-  min-height: 100vh;
+  inset: 0;
+  background-image: url('/src/assets/sky-bg.png');
+  background-size: cover;
+  background-position: center;
   display: flex;
   flex-direction: column;
-  padding-inline: clamp(1.5rem, 6vw, 5rem);
-}
-
-/* ─── NavBar ─────────────────────────────────────────────────────── */
-
-.navbar {
-  display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding-block: 1.75rem;
-  animation: dropDown 0.7s var(--spring) 0.05s both;
+  justify-content: center;
+  overflow: hidden;
 }
 
-.navbar-logo {
+.kawaii-character {
+  width: clamp(220px, 35vw, 420px);
+  height: auto;
+  animation:
+    theatricalDrop 0.95s var(--spring-kawaii) 0.3s both,
+    floatIdle      4s    ease-in-out          2s    infinite;
+  filter: drop-shadow(0 12px 32px rgba(135, 206, 235, 0.45));
+}
+
+.kawaii-name {
   font-family: var(--font-display);
-  font-size: 1.75rem;
+  font-size: clamp(3.5rem, 12vw, 9rem);
   font-weight: 400;
-  color: var(--yellow);
-  letter-spacing: -0.02em;
-  line-height: 1;
+  letter-spacing: 0.02em;
+  background: linear-gradient(135deg, #F9C5D1 0%, #A8C8F0 60%, #FFB3D9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  filter: drop-shadow(0 2px 8px rgba(249, 197, 209, 0.6));
+  animation: nameReveal 0.75s var(--spring-kawaii) 1.3s both;
   user-select: none;
-  display: inline-block;
-  animation: popIn 0.65s var(--ease-snap) 0.15s both;
-  transition: transform 0.35s var(--spring-soft), color 0.2s ease;
-}
-
-.navbar-logo:hover {
-  transform: scale(1.1) rotate(-6deg);
-  color: var(--orange);
-}
-
-/* Party mode overrides the hover transition entirely */
-.navbar-logo--party {
-  animation: popIn 0.65s var(--ease-snap) 0.15s both,
-             logoParty 1.4s var(--spring) forwards !important;
-  pointer-events: none;
-}
-
-.navbar-links {
-  display: flex;
-  align-items: center;
-  gap: 2.5rem;
-}
-
-.navbar-links li {
-  animation: springUp 0.5s var(--spring) both;
-}
-.navbar-links li:nth-child(1) { animation-delay: 0.12s; }
-.navbar-links li:nth-child(2) { animation-delay: 0.20s; }
-.navbar-links li:nth-child(3) { animation-delay: 0.28s; }
-
-.navbar-links a {
-  font-family: var(--font-body);
-  font-size: 0.78rem;
-  font-weight: 400;
-  color: var(--text-muted);
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  display: inline-block;
-  transition:
-    color     0.2s ease,
-    transform 0.3s var(--spring-soft);
-}
-
-.navbar-links a:hover {
-  color: var(--orange);
-  transform: translateY(-3px);
-}
-
-/* ─── Hero Content ───────────────────────────────────────────────── */
-
-.hero-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  padding-bottom: clamp(3rem, 9vh, 7rem);
-}
-
-.hero-eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-bottom: 1.25rem;
-  animation: springUp 0.6s var(--spring) 0.18s both;
-}
-
-.hero-eyebrow span {
-  font-family: var(--font-body);
-  font-size: 0.73rem;
-  font-weight: 400;
-  color: var(--text-faint);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-}
-
-.hero-eyebrow .eyebrow-sep {
-  color: var(--pink);
-  font-size: 0.6rem;
-  letter-spacing: 0;
-  display: inline-block;
-  animation: dotPop 0.55s var(--spring) 0.35s both;
-  transition: transform 0.4s var(--spring-soft);
-}
-
-.hero-eyebrow:hover .eyebrow-sep {
-  transform: rotate(180deg) scale(1.6);
-}
-
-/* The name */
-.hero-name {
-  font-family: var(--font-display);
-  font-size: clamp(4.5rem, 18vw, 15rem);
-  font-weight: 300;
-  font-style: italic;
-  color: var(--yellow);
-  letter-spacing: -0.035em;
-  line-height: 0.88;
-  margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
-  animation: springUpBig 0.85s var(--spring) 0.28s both;
-  display: block;
-  transition:
-    letter-spacing 0.4s var(--ease-snap),
-    color 0.3s ease;
-}
-
-.hero-name:hover {
-  letter-spacing: -0.02em;
-  color: var(--orange);
-}
-
-/* Easter egg state: brief coral pulse on click */
-.hero-name--easter {
-  animation:
-    springUpBig 0.85s var(--spring) 0.28s both,
-    easterPulse 1.8s var(--spring-soft) forwards !important;
-}
-
-/* Rule — draws, then breathes gently when idle */
-.hero-rule {
-  height: 1px;
-  background-color: var(--orange);
-  transform-origin: left center;
-  margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
-  animation:
-    drawLine    0.8s  var(--ease-snap) 0.88s both,
-    ruleShimmer 2.5s  ease-in-out     3.2s  infinite;
-}
-
-.hero-footer {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 2rem;
-  animation: springUp 0.65s var(--spring) 1.05s both;
-}
-
-.hero-description {
-  font-family: var(--font-body);
-  font-size: 0.82rem;
-  font-weight: 300;
-  color: var(--text-muted);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  line-height: 2;
-}
-
-/* ─── Actions ────────────────────────────────────────────────────── */
-
-.hero-actions {
-  display: flex;
-  align-items: center;
-  gap: 2.25rem;
-  flex-shrink: 0;
-}
-
-.btn-primary {
-  font-family: var(--font-body);
-  font-size: 0.875rem;
-  font-weight: 400;
-  color: var(--yellow);
-  letter-spacing: 0.04em;
-  position: relative;
-  padding-bottom: 3px;
-  display: inline-block;
-  transition:
-    transform 0.3s var(--spring-soft),
-    color     0.2s ease;
-}
-
-.btn-primary::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 1px;
-  background-color: var(--yellow);
-  transform-origin: left center;
-  transform: scaleX(1);
-  transition: transform 0.3s var(--ease-snap);
-}
-
-.btn-primary:hover {
-  transform: translateY(-3px) scale(1.04);
-}
-
-.btn-primary:hover::after {
-  transform-origin: right center;
-  transform: scaleX(0);
-}
-
-.btn-primary:active {
-  transform: translateY(1px) scale(0.97);
-  transition-duration: 0.08s;
-}
-
-.btn-ghost {
-  font-family: var(--font-body);
-  font-size: 0.875rem;
-  font-weight: 300;
-  color: var(--orange);
-  letter-spacing: 0.04em;
-  position: relative;
-  padding-bottom: 3px;
-  display: inline-block;
-  transition:
-    transform 0.3s var(--spring-soft),
-    color     0.2s ease;
-}
-
-.btn-ghost::after {
-  content: '';
-  position: absolute;
-  bottom: 0; left: 0; right: 0;
-  height: 1px;
-  background-color: var(--pink);
-  transform-origin: left center;
-  transform: scaleX(0);
-  transition: transform 0.3s var(--ease-snap);
-}
-
-.btn-ghost:hover {
-  color: var(--pink);
-  transform: translateY(-3px);
-}
-
-.btn-ghost:hover::after {
-  transform: scaleX(1);
-}
-
-.btn-ghost:active {
-  transform: translateY(1px) scale(0.97);
-  transition-duration: 0.08s;
-}
-
-/* ─── Mobile ─────────────────────────────────────────────────────── */
-
-@media (max-width: 640px) {
-  .navbar       { padding-block: 1.25rem; }
-  .navbar-links { gap: 1.75rem; }
-
-  .hero-footer {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 1.75rem;
-  }
-
-  .hero-actions { gap: 2rem; }
+  margin-top: clamp(-1.5rem, -3vw, -2.5rem);
 }

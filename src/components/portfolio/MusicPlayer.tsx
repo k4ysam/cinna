@@ -1,22 +1,7 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
+import { audio, TRACKS } from '../../audio'
 
-interface Track {
-  title: string
-  artist: string
-  src: string
-}
-
-// Drop mp3s into public/music/ and add them here
-const TRACKS: Track[] = [
-  { title: 'Track 1', artist: 'Artist', src: '/music/track1.mp3' },
-  { title: 'Track 2', artist: 'Artist', src: '/music/track2.mp3' },
-  { title: 'Track 3', artist: 'Artist', src: '/music/track3.mp3' },
-]
-
-const pill: React.CSSProperties = {
-  display: 'inline-flex',
-  alignItems: 'center',
-  justifyContent: 'center',
+const btn: React.CSSProperties = {
   background: 'none',
   border: 'none',
   cursor: 'pointer',
@@ -24,77 +9,70 @@ const pill: React.CSSProperties = {
   padding: '0 4px',
   fontSize: '14px',
   opacity: 0.7,
+  display: 'inline-flex',
+  alignItems: 'center',
+  justifyContent: 'center',
 }
 
 export default function MusicPlayer() {
-  const audioRef = useRef<HTMLAudioElement | null>(null)
   const [trackIndex, setTrackIndex] = useState(0)
-  const [isPlaying, setIsPlaying]   = useState(false)
-  const [volume, setVolume]         = useState(0.7)
-  const [unavailable, setUnavailable] = useState(false)
+  const [isPlaying, setIsPlaying]   = useState(!audio.paused)
+  const [volume, setVolume]         = useState(audio.volume)
+  const [loadError, setLoadError]   = useState(false)
 
   const track = TRACKS[trackIndex]
 
-  // Create audio element once
+  // Stay in sync with the singleton's play/pause state
   useEffect(() => {
-    const audio = new Audio()
-    audioRef.current = audio
+    const onPlay  = () => setIsPlaying(true)
+    const onPause = () => setIsPlaying(false)
+    const onError = () => setLoadError(true)
+    const onCanPlay = () => setLoadError(false)
+    const onEnded = () => setTrackIndex(i => (i + 1) % TRACKS.length)
 
-    audio.onerror = () => setUnavailable(true)
-    audio.onended = () => {
-      setTrackIndex(i => (i + 1) % TRACKS.length)
-    }
+    audio.addEventListener('play',     onPlay)
+    audio.addEventListener('pause',    onPause)
+    audio.addEventListener('error',    onError)
+    audio.addEventListener('canplay',  onCanPlay)
+    audio.addEventListener('ended',    onEnded)
 
     return () => {
-      audio.pause()
-      audio.src = ''
+      audio.removeEventListener('play',     onPlay)
+      audio.removeEventListener('pause',    onPause)
+      audio.removeEventListener('error',    onError)
+      audio.removeEventListener('canplay',  onCanPlay)
+      audio.removeEventListener('ended',    onEnded)
     }
   }, [])
 
   // Load new track when index changes
   useEffect(() => {
-    const audio = audioRef.current
-    if (!audio) return
-    setUnavailable(false)
-    const wasPlaying = isPlaying
-    audio.pause()
-    audio.src = track.src
+    setLoadError(false)
+    audio.src = TRACKS[trackIndex].src
     audio.load()
-    if (wasPlaying) {
-      audio.play().catch(() => setUnavailable(true))
-    }
+    if (isPlaying) audio.play().catch(() => {})
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trackIndex])
 
   // Sync volume
   useEffect(() => {
-    if (audioRef.current) audioRef.current.volume = volume
+    audio.volume = volume
   }, [volume])
 
   function togglePlay() {
-    const audio = audioRef.current
-    if (!audio || unavailable) return
-    if (isPlaying) {
-      audio.pause()
-      setIsPlaying(false)
+    if (loadError) return
+    if (audio.paused) {
+      audio.play().catch(() => {})
     } else {
-      if (!audio.src) {
-        audio.src = track.src
-        audio.load()
-      }
-      audio.play()
-        .then(() => setIsPlaying(true))
-        .catch(() => setUnavailable(true))
+      audio.pause()
     }
   }
 
   function prev() {
-    setIsPlaying(false)
     setTrackIndex(i => (i - 1 + TRACKS.length) % TRACKS.length)
   }
 
   function next() {
-    setIsPlaying(false)
     setTrackIndex(i => (i + 1) % TRACKS.length)
   }
 
@@ -107,7 +85,7 @@ export default function MusicPlayer() {
         display: 'flex',
         flexDirection: 'column',
         gap: '6px',
-        opacity: unavailable ? 0.5 : 1,
+        opacity: loadError ? 0.5 : 1,
       }}
     >
       {/* Track info */}
@@ -121,18 +99,22 @@ export default function MusicPlayer() {
             color: 'var(--text-dark)',
           }}
         >
-          {unavailable ? 'Unavailable' : track.title}
+          {loadError ? 'Unavailable' : track.title}
         </div>
-        <div style={{ opacity: 0.6, fontSize: '11px' }}>{track.artist}</div>
+        {track.artist && (
+          <div style={{ opacity: 0.6, fontSize: '11px' }}>{track.artist}</div>
+        )}
       </div>
 
       {/* Controls */}
       <div style={{ display: 'flex', alignItems: 'center', gap: '2px' }}>
-        <button onClick={prev} style={pill} aria-label="Previous" title="Prev">‹</button>
+        <button onClick={prev} style={btn} aria-label="Previous">‹</button>
+
         <button
           onClick={togglePlay}
+          aria-label={isPlaying ? 'Pause' : 'Play'}
           style={{
-            ...pill,
+            ...btn,
             width: '28px',
             height: '28px',
             borderRadius: '50%',
@@ -141,13 +123,12 @@ export default function MusicPlayer() {
             opacity: 1,
             fontSize: '11px',
           }}
-          aria-label={isPlaying ? 'Pause' : 'Play'}
         >
           {isPlaying ? '⏸' : '▶'}
         </button>
-        <button onClick={next} style={pill} aria-label="Next" title="Next">›</button>
 
-        {/* Volume */}
+        <button onClick={next} style={btn} aria-label="Next">›</button>
+
         <input
           type="range"
           min={0}

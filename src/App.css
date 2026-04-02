@@ -13,6 +13,38 @@
   50%       { transform: translateY(-12px); }
 }
 
+/* Cloud flood — grid rushes upward */
+@keyframes cloudRush {
+  0%   { transform: translateY(110vh); }
+  100% { transform: translateY(-140vh); }
+}
+
+/* Bouncing arrow */
+@keyframes arrowBounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(10px); }
+}
+
+.bouncing-arrow {
+  position: fixed;
+  bottom: clamp(1.5rem, 5vh, 3rem);
+  left: 50%;
+  translate: -50% 0;
+  z-index: 10;
+  background: none;
+  border: none;
+  cursor: pointer;
+  animation: arrowBounce 1.4s ease-in-out infinite;
+  color: white;
+  filter: drop-shadow(0 2px 8px rgba(255, 255, 255, 0.6));
+  transition: opacity 0.2s ease;
+  padding: 0.5rem;
+}
+
+.bouncing-arrow:hover {
+  opacity: 0.75;
+}
+
 /* Scene background — left-to-right mask sweep */
 @keyframes sweepReveal {
   from { mask-position: 100% 0; }

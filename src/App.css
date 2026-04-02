@@ -13,40 +13,6 @@
   50%       { transform: translateY(-12px); }
 }
 
-/* Cloud slides — foreground layer */
-@keyframes cloudSlideLeft {
-  0%   { transform: translateX(calc(-100% - 60vw)); opacity: 0; }
-  70%  { opacity: 1; }
-  85%  { transform: translateX(8px); }
-  100% { transform: translateX(0); opacity: 1; }
-}
-
-@keyframes cloudSlideRight {
-  0%   { transform: translateX(calc(100% + 60vw)); opacity: 0; }
-  70%  { opacity: 1; }
-  85%  { transform: translateX(-8px); }
-  100% { transform: translateX(0); opacity: 1; }
-}
-
-/* Cloud slides — background layer */
-@keyframes cloudSlideLeftBg {
-  0%   { transform: translateX(calc(-100% - 80vw)); opacity: 0; }
-  70%  { opacity: 0.85; }
-  100% { transform: translateX(0); opacity: 0.85; }
-}
-
-@keyframes cloudSlideRightBg {
-  0%   { transform: translateX(calc(100% + 80vw)); opacity: 0; }
-  70%  { opacity: 0.85; }
-  100% { transform: translateX(0); opacity: 0.85; }
-}
-
-/* Cloud idle float */
-@keyframes cloudFloat {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-8px); }
-}
-
 /* Scene background — left-to-right mask sweep */
 @keyframes sweepReveal {
   from { mask-position: 100% 0; }
@@ -66,7 +32,9 @@
 .kawaii-stage {
   position: fixed;
   inset: 0;
-  background-color: #A8C8F0;
+  background-image: url('/src/assets/sky-bg.png');
+  background-size: cover;
+  background-position: center;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -88,65 +56,15 @@
   animation: sweepReveal 1.8s ease-in-out 0.5s both;
 }
 
-/* ── Cloud layers ─────────────────────────────────────────────── */
-
-.cloud-layer {
-  position: absolute;
-  pointer-events: none;
-  mix-blend-mode: screen;
-}
-
-.cloud-fg-left {
-  width: clamp(260px, 38vw, 520px);
-  bottom: 6%;
-  left: -4%;
-  z-index: 3;
-  animation:
-    cloudSlideLeft 0.70s var(--spring-kawaii) 0.10s both,
-    cloudFloat     5s   ease-in-out           1.8s  infinite;
-}
-
-.cloud-fg-right {
-  width: clamp(260px, 38vw, 520px);
-  bottom: 6%;
-  right: -4%;
-  z-index: 3;
-  scale: -1 1;
-  animation:
-    cloudSlideRight 0.70s var(--spring-kawaii) 0.10s both,
-    cloudFloat      5s   ease-in-out           2.3s  infinite;
-}
-
-.cloud-bg-left {
-  width: clamp(200px, 28vw, 380px);
-  top: 14%;
-  left: 2%;
-  z-index: 1;
-  animation:
-    cloudSlideLeftBg 1.10s var(--spring-gentle) 0.30s both,
-    cloudFloat       7s   ease-in-out            2.8s  infinite;
-}
-
-.cloud-bg-right {
-  width: clamp(200px, 28vw, 380px);
-  top: 14%;
-  right: 2%;
-  z-index: 1;
-  scale: -1 1;
-  animation:
-    cloudSlideRightBg 1.10s var(--spring-gentle) 0.30s both,
-    cloudFloat        7s   ease-in-out            3.4s  infinite;
-}
-
-/* ── Cinnamoroll ──────────────────────────────────────────────── */
+/* ── Cinnamoroll — top-left bobbing icon ──────────────────────── */
 
 .kawaii-character {
-  position: relative;
+  position: absolute;
+  top: clamp(1rem, 3vw, 2rem);
+  left: clamp(1rem, 3vw, 2rem);
   z-index: 5;
-  width: clamp(220px, 35vw, 420px);
+  width: clamp(72px, 10vw, 120px);
   height: auto;
-  animation:
-    theatricalDrop 0.95s var(--spring-kawaii) 1.5s both,
-    floatIdle      4s    ease-in-out          3.2s  infinite;
-  filter: drop-shadow(0 12px 32px rgba(135, 206, 235, 0.45));
+  animation: floatIdle 3.5s ease-in-out 0.5s infinite;
+  filter: drop-shadow(0 4px 12px rgba(135, 206, 235, 0.5));
 }

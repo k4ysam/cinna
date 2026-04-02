@@ -1,18 +1,28 @@
 import { useEffect, useRef } from 'react'
 
+const SPARK_COLORS = ['var(--yellow)', 'var(--orange)', 'var(--pink)']
+
+function spawnSpark(x: number, y: number) {
+  const el = document.createElement('div')
+  el.className = 'cursor-spark'
+  el.style.cssText = `left:${x}px;top:${y}px;background:${SPARK_COLORS[Math.floor(Math.random() * 3)]}`
+  document.body.appendChild(el)
+  setTimeout(() => el.remove(), 500)
+}
+
 export default function CursorDot() {
   const dotRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    // Only run on true pointer devices — skip touch/stylus
     if (!window.matchMedia('(pointer: fine)').matches) return
 
     const dot = dotRef.current
     if (!dot) return
 
-    const target = { x: -100, y: -100 }
+    const target  = { x: -100, y: -100 }
     const current = { x: -100, y: -100 }
     let rafId = 0
+    let lastSparkTime = 0
 
     function lerp(a: number, b: number, t: number) {
       return a + (b - a) * t
@@ -22,12 +32,19 @@ export default function CursorDot() {
       target.x = e.clientX
       target.y = e.clientY
 
-      // Detect interactive elements directly from the event target
+      // Hover detection via event target — no per-element listeners needed
       const el = e.target as HTMLElement
-      if (el.closest('a, button')) {
+      if (el.closest('a, button, [role="button"]')) {
         dot.setAttribute('data-hover', '')
       } else {
         dot.removeAttribute('data-hover')
+      }
+
+      // Spark trail — throttled to ~20/sec
+      const now = performance.now()
+      if (now - lastSparkTime > 50) {
+        lastSparkTime = now
+        spawnSpark(e.clientX, e.clientY)
       }
     }
 
@@ -41,7 +58,6 @@ export default function CursorDot() {
     function loop() {
       current.x = lerp(current.x, target.x, 0.14)
       current.y = lerp(current.y, target.y, 0.14)
-      // translate minus 50% of element size to center it on cursor
       dot.style.transform =
         `translate(calc(${current.x}px - 50%), calc(${current.y}px - 50%))`
       rafId = requestAnimationFrame(loop)

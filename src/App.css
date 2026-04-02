@@ -1,24 +1,20 @@
 /* ─── Keyframes ─────────────────────────────────────────────────── */
 
-/* Spring rise: used for eyebrow, footer */
 @keyframes springUp {
   from { opacity: 0; transform: translateY(36px); }
   to   { opacity: 1; transform: translateY(0);    }
 }
 
-/* Big spring rise: hero name — more travel, more drama */
 @keyframes springUpBig {
   from { opacity: 0; transform: translateY(70px) skewY(2deg); }
   to   { opacity: 1; transform: translateY(0)    skewY(0deg); }
 }
 
-/* Navbar drops from above */
 @keyframes dropDown {
   from { opacity: 0; transform: translateY(-20px); }
   to   { opacity: 1; transform: translateY(0);     }
 }
 
-/* Logo pops in with personality */
 @keyframes popIn {
   0%   { opacity: 0; transform: scale(0.4) rotate(-12deg); }
   55%  { opacity: 1; transform: scale(1.12) rotate(4deg);  }
@@ -26,26 +22,99 @@
   100% {             transform: scale(1)   rotate(0deg);   }
 }
 
-/* Rule: draws across, flashes yellow then settles orange */
+@keyframes dotPop {
+  0%   { opacity: 0; transform: scale(0) rotate(-90deg);  }
+  60%  { opacity: 1; transform: scale(1.4) rotate(10deg); }
+  100% {             transform: scale(1)  rotate(0deg);   }
+}
+
+/* Rule: draws across, flashes then settles */
 @keyframes drawLine {
   0%   { transform: scaleX(0); filter: brightness(1.8); }
   70%  { transform: scaleX(1); filter: brightness(1.5); }
   100% { transform: scaleX(1); filter: brightness(1);   }
 }
 
-/* Separator dot pops in */
-@keyframes dotPop {
-  0%   { opacity: 0; transform: scale(0) rotate(-90deg); }
-  60%  { opacity: 1; transform: scale(1.4) rotate(10deg); }
-  100% {             transform: scale(1) rotate(0deg);    }
+/* Idle shimmer on the rule after it finishes drawing */
+@keyframes ruleShimmer {
+  0%, 100% { opacity: 1;    }
+  50%      { opacity: 0.45; }
+}
+
+/* Logo party: 720° spin + color cycle on the S. easter egg */
+@keyframes logoParty {
+  0%   { transform: scale(1)   rotate(0deg);   color: var(--yellow); }
+  25%  { transform: scale(1.3) rotate(180deg); color: var(--orange); }
+  50%  { transform: scale(1.1) rotate(360deg); color: var(--pink);   }
+  75%  { transform: scale(1.2) rotate(540deg); color: var(--coral);  }
+  100% { transform: scale(1)   rotate(720deg); color: var(--yellow); }
+}
+
+/* Name easter egg: quick color pulse when clicked */
+@keyframes easterPulse {
+  0%   { color: var(--coral); transform: scale(1.02); }
+  60%  { color: var(--pink);  transform: scale(1.04); }
+  100% { color: var(--coral); transform: scale(1);    }
+}
+
+/* Toast "👋 hi!" that floats up from name click */
+@keyframes toastUp {
+  0%   { opacity: 1; transform: translate(-50%, -120%) translateY(0);    }
+  55%  { opacity: 1; transform: translate(-50%, -120%) translateY(-22px); }
+  100% { opacity: 0; transform: translate(-50%, -120%) translateY(-38px); }
+}
+
+/* Cursor spark trail */
+@keyframes sparkFade {
+  0%   { opacity: 0.9; transform: translate(-50%, -50%) scale(1);   }
+  100% { opacity: 0;   transform: translate(-50%, -50%) scale(0.1); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   * {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    animation-duration:        0.01ms !important;
+    animation-iteration-count: 1      !important;
+    transition-duration:       0.01ms !important;
   }
+}
+
+/* ─── Cursor spark ───────────────────────────────────────────────── */
+
+.cursor-spark {
+  position: fixed;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  animation: sparkFade 0.5s var(--ease-snap) forwards;
+}
+
+/* ─── Name toast ─────────────────────────────────────────────────── */
+
+.name-toast {
+  position: fixed;
+  font-family: var(--font-body);
+  font-size: 1.1rem;
+  color: var(--coral);
+  pointer-events: none;
+  z-index: 500;
+  animation: toastUp 1.5s var(--ease-snap) forwards;
+  white-space: nowrap;
+}
+
+/* ─── Word cycling ───────────────────────────────────────────────── */
+
+.word-cycle {
+  display: inline-block;
+  transition:
+    opacity   0.28s ease,
+    transform 0.28s var(--ease-snap);
+}
+
+.word-cycle--fading {
+  opacity: 0;
+  transform: translateY(-10px);
 }
 
 /* ─── Layout shell ───────────────────────────────────────────────── */
@@ -67,7 +136,6 @@
   animation: dropDown 0.7s var(--spring) 0.05s both;
 }
 
-/* Logo springs in and tilts playfully on hover */
 .navbar-logo {
   font-family: var(--font-display);
   font-size: 1.75rem;
@@ -86,13 +154,19 @@
   color: var(--orange);
 }
 
+/* Party mode overrides the hover transition entirely */
+.navbar-logo--party {
+  animation: popIn 0.65s var(--ease-snap) 0.15s both,
+             logoParty 1.4s var(--spring) forwards !important;
+  pointer-events: none;
+}
+
 .navbar-links {
   display: flex;
   align-items: center;
   gap: 2.5rem;
 }
 
-/* Each nav link cascades in individually */
 .navbar-links li {
   animation: springUp 0.5s var(--spring) both;
 }
@@ -128,7 +202,6 @@
   padding-bottom: clamp(3rem, 9vh, 7rem);
 }
 
-/* Eyebrow */
 .hero-eyebrow {
   display: flex;
   align-items: center;
@@ -146,7 +219,6 @@
   text-transform: uppercase;
 }
 
-/* Hot pink separator — spins in, rotates on eyebrow hover */
 .hero-eyebrow .eyebrow-sep {
   color: var(--pink);
   font-size: 0.6rem;
@@ -160,7 +232,7 @@
   transform: rotate(180deg) scale(1.6);
 }
 
-/* The name — biggest spring in the whole page */
+/* The name */
 .hero-name {
   font-family: var(--font-display);
   font-size: clamp(4.5rem, 18vw, 15rem);
@@ -172,7 +244,9 @@
   margin-bottom: clamp(1.5rem, 3vw, 2.5rem);
   animation: springUpBig 0.85s var(--spring) 0.28s both;
   display: block;
-  transition: letter-spacing 0.4s var(--ease-snap), color 0.3s ease;
+  transition:
+    letter-spacing 0.4s var(--ease-snap),
+    color 0.3s ease;
 }
 
 .hero-name:hover {
@@ -180,16 +254,24 @@
   color: var(--orange);
 }
 
-/* Rule — draws left-to-right, flashes then settles */
+/* Easter egg state: brief coral pulse on click */
+.hero-name--easter {
+  animation:
+    springUpBig 0.85s var(--spring) 0.28s both,
+    easterPulse 1.8s var(--spring-soft) forwards !important;
+}
+
+/* Rule — draws, then breathes gently when idle */
 .hero-rule {
   height: 1px;
   background-color: var(--orange);
   transform-origin: left center;
   margin-bottom: clamp(1.25rem, 2.5vw, 2rem);
-  animation: drawLine 0.8s var(--ease-snap) 0.88s both;
+  animation:
+    drawLine    0.8s  var(--ease-snap) 0.88s both,
+    ruleShimmer 2.5s  ease-in-out     3.2s  infinite;
 }
 
-/* Footer */
 .hero-footer {
   display: flex;
   align-items: flex-end;
@@ -217,7 +299,6 @@
   flex-shrink: 0;
 }
 
-/* Primary — lifts and grows on hover, presses on active */
 .btn-primary {
   font-family: var(--font-body);
   font-size: 0.875rem;
@@ -235,9 +316,7 @@
 .btn-primary::after {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 0; left: 0; right: 0;
   height: 1px;
   background-color: var(--yellow);
   transform-origin: left center;
@@ -259,7 +338,6 @@
   transition-duration: 0.08s;
 }
 
-/* Ghost — lifts and flips to pink on hover */
 .btn-ghost {
   font-family: var(--font-body);
   font-size: 0.875rem;
@@ -277,9 +355,7 @@
 .btn-ghost::after {
   content: '';
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
+  bottom: 0; left: 0; right: 0;
   height: 1px;
   background-color: var(--pink);
   transform-origin: left center;
@@ -304,13 +380,8 @@
 /* ─── Mobile ─────────────────────────────────────────────────────── */
 
 @media (max-width: 640px) {
-  .navbar {
-    padding-block: 1.25rem;
-  }
-
-  .navbar-links {
-    gap: 1.75rem;
-  }
+  .navbar       { padding-block: 1.25rem; }
+  .navbar-links { gap: 1.75rem; }
 
   .hero-footer {
     flex-direction: column;
@@ -318,7 +389,5 @@
     gap: 1.75rem;
   }
 
-  .hero-actions {
-    gap: 2rem;
-  }
+  .hero-actions { gap: 2rem; }
 }

@@ -8,15 +8,49 @@
   100% { transform: translateY(0)      rotate(0deg);  opacity: 1; }
 }
 
-@keyframes nameReveal {
-  0%   { opacity: 0; transform: scale(0.75) translateY(16px); }
-  65%  { opacity: 1; transform: scale(1.05) translateY(-4px); }
-  100% { opacity: 1; transform: scale(1)    translateY(0);    }
-}
-
 @keyframes floatIdle {
   0%, 100% { transform: translateY(0); }
   50%       { transform: translateY(-12px); }
+}
+
+/* Cloud slides — foreground layer */
+@keyframes cloudSlideLeft {
+  0%   { transform: translateX(calc(-100% - 60vw)); opacity: 0; }
+  70%  { opacity: 1; }
+  85%  { transform: translateX(8px); }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes cloudSlideRight {
+  0%   { transform: translateX(calc(100% + 60vw)); opacity: 0; }
+  70%  { opacity: 1; }
+  85%  { transform: translateX(-8px); }
+  100% { transform: translateX(0); opacity: 1; }
+}
+
+/* Cloud slides — background layer */
+@keyframes cloudSlideLeftBg {
+  0%   { transform: translateX(calc(-100% - 80vw)); opacity: 0; }
+  70%  { opacity: 0.85; }
+  100% { transform: translateX(0); opacity: 0.85; }
+}
+
+@keyframes cloudSlideRightBg {
+  0%   { transform: translateX(calc(100% + 80vw)); opacity: 0; }
+  70%  { opacity: 0.85; }
+  100% { transform: translateX(0); opacity: 0.85; }
+}
+
+/* Cloud idle float */
+@keyframes cloudFloat {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-8px); }
+}
+
+/* Scene background — left-to-right mask sweep */
+@keyframes sweepReveal {
+  from { mask-position: 100% 0; }
+  to   { mask-position:   0% 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -27,14 +61,12 @@
   }
 }
 
-/* ── Layout ───────────────────────────────────────────────────── */
+/* ── Stage ────────────────────────────────────────────────────── */
 
 .kawaii-stage {
   position: fixed;
   inset: 0;
-  background-image: url('/src/assets/sky-bg.png');
-  background-size: cover;
-  background-position: center;
+  background-color: #A8C8F0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -42,26 +74,79 @@
   overflow: hidden;
 }
 
+/* ── Scene background with mask reveal ───────────────────────── */
+
+.scene-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+  mask-image: linear-gradient(to right, black 50%, transparent 50%);
+  mask-size: 200% 100%;
+  mask-position: 100% 0;
+  animation: sweepReveal 1.8s ease-in-out 0.5s both;
+}
+
+/* ── Cloud layers ─────────────────────────────────────────────── */
+
+.cloud-layer {
+  position: absolute;
+  pointer-events: none;
+  mix-blend-mode: screen;
+}
+
+.cloud-fg-left {
+  width: clamp(260px, 38vw, 520px);
+  bottom: 6%;
+  left: -4%;
+  z-index: 3;
+  animation:
+    cloudSlideLeft 0.70s var(--spring-kawaii) 0.10s both,
+    cloudFloat     5s   ease-in-out           1.8s  infinite;
+}
+
+.cloud-fg-right {
+  width: clamp(260px, 38vw, 520px);
+  bottom: 6%;
+  right: -4%;
+  z-index: 3;
+  scale: -1 1;
+  animation:
+    cloudSlideRight 0.70s var(--spring-kawaii) 0.10s both,
+    cloudFloat      5s   ease-in-out           2.3s  infinite;
+}
+
+.cloud-bg-left {
+  width: clamp(200px, 28vw, 380px);
+  top: 14%;
+  left: 2%;
+  z-index: 1;
+  animation:
+    cloudSlideLeftBg 1.10s var(--spring-gentle) 0.30s both,
+    cloudFloat       7s   ease-in-out            2.8s  infinite;
+}
+
+.cloud-bg-right {
+  width: clamp(200px, 28vw, 380px);
+  top: 14%;
+  right: 2%;
+  z-index: 1;
+  scale: -1 1;
+  animation:
+    cloudSlideRightBg 1.10s var(--spring-gentle) 0.30s both,
+    cloudFloat        7s   ease-in-out            3.4s  infinite;
+}
+
+/* ── Cinnamoroll ──────────────────────────────────────────────── */
+
 .kawaii-character {
+  position: relative;
+  z-index: 5;
   width: clamp(220px, 35vw, 420px);
   height: auto;
   animation:
-    theatricalDrop 0.95s var(--spring-kawaii) 0.3s both,
-    floatIdle      4s    ease-in-out          2s    infinite;
+    theatricalDrop 0.95s var(--spring-kawaii) 1.5s both,
+    floatIdle      4s    ease-in-out          3.2s  infinite;
   filter: drop-shadow(0 12px 32px rgba(135, 206, 235, 0.45));
-}
-
-.kawaii-name {
-  font-family: var(--font-display);
-  font-size: clamp(3.5rem, 12vw, 9rem);
-  font-weight: 400;
-  letter-spacing: 0.02em;
-  background: linear-gradient(135deg, #F9C5D1 0%, #A8C8F0 60%, #FFB3D9 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  filter: drop-shadow(0 2px 8px rgba(249, 197, 209, 0.6));
-  animation: nameReveal 0.75s var(--spring-kawaii) 1.3s both;
-  user-select: none;
-  margin-top: clamp(-1.5rem, -3vw, -2.5rem);
 }

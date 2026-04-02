@@ -20,7 +20,6 @@ export default function KawaiiHero() {
   }, [])
 
   const lines = typed.split('\n')
-  const done = typed.length >= FULL_TEXT.length
 
   return (
     <div className="kawaii-stage">

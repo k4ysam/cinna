@@ -76,7 +76,7 @@ export default function ExperienceSection() {
               <div
                 style={{
                   fontFamily: 'var(--font-display)',
-                  fontSize: '22px',
+                  fontSize: '20px',
                   color: 'var(--text-dark)',
                   lineHeight: 1.2,
                   marginBottom: '4px',

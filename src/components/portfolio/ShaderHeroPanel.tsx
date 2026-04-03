@@ -29,7 +29,7 @@ export default function ShaderHeroPanel() {
         }}
         colorBack="hsl(0, 0%, 100%)"
         colorFront="hsl(320, 55%, 45%)"
-        shape="circle"
+        shape="simplex"
         type="4x4"
         size={4}
         speed={0.2}

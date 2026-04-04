@@ -1,6 +1,25 @@
-import { useRef } from 'react'
+import { useRef, useState } from 'react'
 import ShaderHeroPanel from './ShaderHeroPanel'
 import { useDarkMode } from '../../hooks/useDarkMode'
+
+type ThemeKey = 'default' | 'slate' | 'sage' | 'peach' | 'noir'
+
+const THEMES: Record<ThemeKey, { name: string; accent: string; cloud: string; textDark: string }> = {
+  default: { name: 'Default', accent: '#F9C5D1', cloud: '#F5EFFF', textDark: '#4a3f5c' },
+  slate:   { name: 'Slate',   accent: '#6B7FD4', cloud: '#F0F2F5', textDark: '#1e2235' },
+  sage:    { name: 'Sage',    accent: '#7FAE8E', cloud: '#F0F4F0', textDark: '#2d3d2e' },
+  peach:   { name: 'Peach',   accent: '#E8845A', cloud: '#FEF3EE', textDark: '#3d2218' },
+  noir:    { name: 'Noir',    accent: '#E2E2E2', cloud: '#161618', textDark: '#f0f0f0' },
+}
+
+function applyTheme(key: ThemeKey) {
+  const t = THEMES[key]
+  const root = document.documentElement
+  root.style.setProperty('--cloud', t.cloud)
+  root.style.setProperty('--candy-pink', t.accent)
+  root.style.setProperty('--text-dark', t.textDark)
+  root.setAttribute('data-theme', key)
+}
 
 interface Props {
   children: React.ReactNode
@@ -9,6 +28,12 @@ interface Props {
 export default function PortfolioLayout({ children }: Props) {
   const scrollContainerRef = useRef<HTMLDivElement>(null)
   const [isDark, toggleDark] = useDarkMode()
+  const [activeTheme, setActiveTheme] = useState<ThemeKey>('default')
+
+  function handleTheme(key: ThemeKey) {
+    applyTheme(key)
+    setActiveTheme(key)
+  }
 
   return (
     <div className="portfolio-layout">
@@ -17,34 +42,63 @@ export default function PortfolioLayout({ children }: Props) {
 
       {/* Right — scrollable content */}
       <div ref={scrollContainerRef} className="portfolio-scroll" style={{ position: 'relative' }}>
-        {/* Dark mode toggle — fixed to top of right panel */}
-        <button
-          role="switch"
-          aria-checked={isDark}
-          onClick={toggleDark}
-          aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+
+        {/* Swatches + icon-only toggle — sticky top-right */}
+        <div
           style={{
             position: 'sticky',
             top: '1.5rem',
             float: 'right',
             zIndex: 10,
-            background: 'var(--cloud)',
-            border: '1.5px solid rgba(74,63,92,0.2)',
-            borderRadius: '20px',
-            padding: '5px 12px',
-            fontSize: '12px',
-            cursor: 'pointer',
-            color: 'var(--text-dark)',
             display: 'flex',
             alignItems: 'center',
-            gap: '6px',
-            transition: 'color 0.2s ease, border-color 0.2s ease, background 0.3s ease',
-            fontFamily: 'var(--font-body)',
-            boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+            gap: '8px',
           }}
         >
-          {isDark ? (
-            <>
+          {/* 5 theme swatches */}
+          {(Object.keys(THEMES) as ThemeKey[]).map(key => (
+            <button
+              key={key}
+              onClick={() => handleTheme(key)}
+              aria-label={THEMES[key].name}
+              style={{
+                width: '16px',
+                height: '16px',
+                borderRadius: '50%',
+                background: THEMES[key].accent,
+                border: 'none',
+                cursor: 'pointer',
+                padding: 0,
+                flexShrink: 0,
+                outline: activeTheme === key ? `2px solid ${THEMES[key].accent}` : 'none',
+                outlineOffset: '2px',
+                transition: 'outline 0.15s ease',
+              }}
+            />
+          ))}
+
+          {/* Sun / Moon icon-only toggle */}
+          <button
+            role="switch"
+            aria-checked={isDark}
+            onClick={toggleDark}
+            aria-label={isDark ? 'Switch to light mode' : 'Switch to dark mode'}
+            style={{
+              background: 'none',
+              border: 'none',
+              padding: '4px',
+              borderRadius: '8px',
+              cursor: 'pointer',
+              color: 'var(--text-dark)',
+              display: 'flex',
+              alignItems: 'center',
+              opacity: 0.6,
+              transition: 'opacity 0.2s',
+            }}
+            onMouseEnter={e => (e.currentTarget.style.opacity = '1')}
+            onMouseLeave={e => (e.currentTarget.style.opacity = '0.6')}
+          >
+            {isDark ? (
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round">
                 <circle cx="12" cy="12" r="4" />
                 <line x1="12" y1="2" x2="12" y2="5" />
@@ -56,17 +110,13 @@ export default function PortfolioLayout({ children }: Props) {
                 <line x1="4.22" y1="19.78" x2="6.34" y2="17.66" />
                 <line x1="17.66" y1="6.34" x2="19.78" y2="4.22" />
               </svg>
-              Light
-            </>
-          ) : (
-            <>
+            ) : (
               <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} strokeLinecap="round">
                 <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
               </svg>
-              Dark
-            </>
-          )}
-        </button>
+            )}
+          </button>
+        </div>
 
         {children}
       </div>

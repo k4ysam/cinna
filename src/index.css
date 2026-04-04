@@ -93,6 +93,31 @@ html.dark {
   --border:           240 12% 22%;
 }
 
+/* ── Per-theme dark mode overrides ──────────────────────────── */
+html.dark[data-theme="slate"] {
+  --cloud:      #0d0f1a;
+  --candy-pink: #8B9FE8;
+  --text-dark:  #d0d6f0;
+}
+
+html.dark[data-theme="sage"] {
+  --cloud:      #0f1a10;
+  --candy-pink: #9FC4AE;
+  --text-dark:  #c8dac9;
+}
+
+html.dark[data-theme="peach"] {
+  --cloud:      #1a0e08;
+  --candy-pink: #E8845A;
+  --text-dark:  #f0d8cc;
+}
+
+html.dark[data-theme="noir"] {
+  --cloud:      #0a0a0b;
+  --candy-pink: #ffffff;
+  --text-dark:  #e8e8e8;
+}
+
 /* ── Portfolio layout ────────────────────────────────────────── */
 .portfolio-layout {
   --font-display: 'DM Serif Display', Georgia, serif;
